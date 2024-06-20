@@ -3,7 +3,6 @@ import time
 
 led = 21
 
-
 #GPIO를 BCM 모드 설정
 GPIO.setmode(GPIO.BCM)
 #GPIO핀 설정(입력 / 출력)
