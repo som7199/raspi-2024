@@ -38,11 +38,11 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 
 - 스위치
 
-    ![KCL](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras002.png)
+    ![input](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras002.png)
 
 
-- 피에조 부저(piezo buzzer)  (PWM 방식으로 작동)
-    - (압전효과) 물체에 기계적인 압력을 가하면 전압이 발생하고 , 역으로 전압을 가하면 기계적인 변형이 발생하는 형상 
+- 피에조 부저(piezo buzzer) - PWM 방식으로 작동
+    - (압전효과) 물체에 기계적인 압력을 가하면 전압이 발생하고 , 역으로 전압을 가하면 기계적인 변형이 발생하는 현상 
     - 디지털 핀의 전압을 매우 짧은 시간 안에 바꾸어가며 주파수에 맞는 소리를 낼 수 있음 
     - 능동 부저(Active Buzzer)
         - 외부 전원으로만 소리가 발생 **단순한 소리출력만 가능**
@@ -52,7 +52,7 @@ IoT 개발자 과정 라즈베리파이 리포지토리
         - 다양한 음색을 출력가능 
         - tone(), noTone()함수를 사용
 
-    - ![피에조 부저원리(압전효과)](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras003.png)
+        ![피에조 부저원리](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras003.png)
 
 
 ## 2일차
@@ -63,7 +63,7 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - 가상환경을 빠져나오려면 decativate
 
 - 가상환경 밖에서
-    - sudo git clone https://github.com/WiringPi/WiringPi (나 이거 day02 파일 안에다 클론했어..!)
+    - sudo git clone https://github.com/WiringPi/WiringPi (raspi-2024/day02/ 에 클론..!)
     - cd WiringPi에서 sudo ./build 실행하고
     - gpio -v 로 확인해보기!
 
