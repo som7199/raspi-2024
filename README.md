@@ -24,10 +24,10 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - GPIO.cleanup()
 
 - GPIO 출력함수
-   - GPIO.output(channel , state)
+    - GPIO.output(channel , state)
     - channel : 핀 번호, state ; HIGH/LOW or 1/0 or True/Fasle
 - GPIO 입력함수
-   - GPIO.input(channel)
+    - GPIO.input(channel)
     - channel; 핀번호, 반환값 H/L or 1/- or T/F
 - 시간지연 함수 TIME.SLEEP(SECS)
 
@@ -37,3 +37,13 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 
 - 스위치
     ![KCL](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras002.png)
+
+## 2일차
+- 가상환경에서 작업하기
+    - python -m venv 가상환경 이름(rpiEnv로 함)
+    - source ./rpiEnv/bin/activate 로 가상환경 
+    
+- 가상환경 밖에서
+    - sudo git clone https://github.com/WiringPi/WiringPi (나 이거 day02 파일 안에다 클론했어..!)
+    - cd WiringPi에서 sudo ./build 실행하고
+    - gpio -v 로 확인해보기!
