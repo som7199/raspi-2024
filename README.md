@@ -5,6 +5,7 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 - 키르히호프 법칙 
     - KVC(전압 법칙): 키르히호프 전압 법칙은 회로의 닫힌 루프에서 모든 전압 강하의 합이 0
     - KCL(전류 법칙): 키르히호프 전류 법칙은 회로의 임의의 접점에서 들어오는 전류의 합과 나가는 전류의 합이 같음
+    
         ![KCL](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras001.png)
 
 - 전기회로 구조
@@ -36,7 +37,9 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - R : Red색상을 켜기 위해선 R을 거쳐서 ground 로 향하면 됨 
 
 - 스위치
+
     ![KCL](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras002.png)
+
 
 - 피에조 부저(piezo buzzer)  (PWM 방식으로 작동)
     - (압전효과) 물체에 기계적인 압력을 가하면 전압이 발생하고 , 역으로 전압을 가하면 기계적인 변형이 발생하는 형상 
@@ -82,6 +85,7 @@ IoT 개발자 과정 라즈베리파이 리포지토리
         - 송신기 : 40KHz 영역대의 초음파를 방출 
         - 수신시 : 송신기에서 방출된 초음파가 물체에 반사되어 수신기에 돌아온 시간을 통해 거리를 측정
   - ![초음파센서 작동원리](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras004.png)
+
     - 라즈베리파이 연결
         - 필요한 부품
             - 라즈베리파이
