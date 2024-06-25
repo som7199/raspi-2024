@@ -150,3 +150,16 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - POST 요청 
         - 데이터의 양이 많을 때
         - 전달하려는 정보가 HTTP body에 포함되어 전달
+
+## 4일차
+- 4-digit 규격의 공통 음극(Common Cathod)
+    - 전류가 위에서 아래로 흐름
+    - 공통 단자인 COM 부분에 GND, a,b,c,d,e,f,g,dp에 
+        ![Common Cathod](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras007.png)
+
+- 4-digit 규격의 공통 양극(Common Anode)
+    - 전류가 아래에서 위로 흐름
+    - 공통 단자인 COM 부분에 VCC, a,b,c,d,e,f,g,dp에 GND
+        ![Common Anode](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras008.png)
+
+- 내꺼는 공통 양극!
