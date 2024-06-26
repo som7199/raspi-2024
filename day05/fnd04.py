@@ -1,4 +1,6 @@
 # 0 ~ 9999 출력하기
+# 11, 22, ~, 99 / 111, 222, ~, 999 / 1111, 2222, ~, 9999로 출력되는 중...
+# 순서대로 1 ~ 10, 11, 12, ~ 9999까지 출력되는 코드는 fnd04_m.py
 import RPi.GPIO as GPIO
 import time
 
@@ -32,22 +34,24 @@ def display_number(pos, number):
 	pattern = segment_patterns[number]
 
 	for i in range(len(com_pins)):
-		if i == pos-1:
+		if i == pos:
 			GPIO.output(com_pins[i], True)
-		for pin, state in zip(segment_pins, pattern):
-			GPIO.output(pin, state)
+			for pin, state in zip(segment_pins, pattern):
+				GPIO.output(pin, state)
 
 def main():
 	try:
+		setup()
 		while True:
-			setup()
-			for pin in com_pins:
-				GPIO.output(pin, False)
+			for i in range(len(com_pins)):
+				GPIO.output(com_pins[i], False)
 
-			for i in range(4, 0, -1):
+			for i in range(3, 0, -1):
 				for j in range(1, 10):
 					display_number(i, j)
-					time.sleep(0.1)
+					time.sleep(0.5)
+				display_number(i, 0)
+			time.sleep(1)
 
 	except KeyboardInterrupt:
 		GPIO.cleanup()
