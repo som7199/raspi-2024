@@ -1,4 +1,4 @@
-# 1234 출력하기
+# 0 ~ 9999 출력하기
 import RPi.GPIO as GPIO
 import time
 
@@ -24,14 +24,12 @@ def setup():
 	GPIO.setmode(GPIO.BCM)
 	for pin in segment_pins:
 		GPIO.setup(pin, GPIO.OUT)
+
 	for com in com_pins:
 		GPIO.setup(com, GPIO.OUT)
 
 def display_number(pos, number):
 	pattern = segment_patterns[number]
-
-	for pin in com_pins:
-		GPIO.output(pin, False)
 
 	for i in range(len(com_pins)):
 		if i == pos-1:
@@ -39,19 +37,19 @@ def display_number(pos, number):
 		for pin, state in zip(segment_pins, pattern):
 			GPIO.output(pin, state)
 
-
 def main():
 	try:
 		while True:
 			setup()
-			for i in range(1, 5):
-				display_number(i, i)
-				time.sleep(0.01)
+			for pin in com_pins:
+				GPIO.output(pin, False)
+
+			for i in range(4, 0, -1):
+				for j in range(1, 10):
+					display_number(i, j)
+					time.sleep(0.1)
 
 	except KeyboardInterrupt:
-		print("")
-
-	finally:
 		GPIO.cleanup()
 
 if __name__ == '__main__':
