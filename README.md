@@ -37,7 +37,12 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - R : Red색상을 켜기 위해선 R을 거쳐서 ground 로 향하면 됨 
 
 - 스위치
-
+    - 내장 pull-down, pull-up 저항 사용
+        - 스위치에 pull-down, pull-up 회로를 만들어주지 않고도 라즈베리파이 내부에 풀다운/풀업 저항을 만들어 놓고 sw로 활성화 할 수 있도록 되어있다.
+        ```python
+        GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_UP) # 스위치 안눌렸을 때 on, 눌렸을 때 off
+        GPIO.setup(18, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) # 스위치 안눌렸을 때 off, 눌렸을 때 on
+        ```
     ![input](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras002.png)
 
 
