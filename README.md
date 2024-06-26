@@ -168,3 +168,6 @@ IoT 개발자 과정 라즈베리파이 리포지토리
         ![Common Anode](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras008.png)
 
 - 내꺼는 공통 양극!
+
+## 5일차
+- 4 Digit FND 실습
