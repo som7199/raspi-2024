@@ -157,9 +157,9 @@ IoT 개발자 과정 라즈베리파이 리포지토리
         - 전달하려는 정보가 HTTP body에 포함되어 전달
 
 ## 4일차
-- 4-digit 규격의 공통 음극(Common Cathod)
+- 4-digit 규격의 공통 음극(Common Cathode)
     - 전류가 위에서 아래로 흐름
-    - 공통 단자인 COM 부분에 GND, a,b,c,d,e,f,g,dp에 
+    - 공통 단자인 COM 부분에 GND, a,b,c,d,e,f,g,dp에 VCC
         ![Common Cathod](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras007.png)
 
 - 4-digit 규격의 공통 양극(Common Anode)
@@ -171,3 +171,5 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 
 ## 5일차
 - 4 Digit FND 실습
+
+## 6일차
