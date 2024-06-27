@@ -7,7 +7,8 @@ fndDatas = [0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82, 0xD8, 0x80, 0x90]	# Anode
 # a ~ g led
 fndSegs = [5, 6, 12, 16, 20, 13, 21]
 # fnd 선택 pin
-fndSels = [18, 22, 23, 24]
+# fndSels = [18, 22, 23, 24]
+fndSels = [24, 23, 22, 18]
 
 GPIO.setmode(GPIO.BCM)
 for fndSeg in fndSegs:

@@ -7,8 +7,8 @@ fndDatas = [0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82, 0xD8, 0x80, 0x90]	# Anode
 # a ~ g led
 fndSegs = [5, 6, 12, 16, 20, 13, 21]
 # fnd 선택 pin
-# fndSels = [24, 23, 22, 18]
 fndSels = [24, 23, 22, 18]
+count = 0
 
 GPIO.setmode(GPIO.BCM)
 for fndSeg in fndSegs:
@@ -20,19 +20,31 @@ for fndSel in fndSels:
 	GPIO.output(fndSel, 0)
 
 # 하나의 숫자 형태를 만드는 함수
-def fndOut(data):
+def fndOut(data, sel):
 	for i in range(0, 7):
+		# 비트 AND 연산으로 특정 세그먼트가 켜져 있는지 확인
 		GPIO.output(fndSegs[i], fndDatas[data] & (0x01 << i))
+		# 표시할 자리수의 fnd만 ON
+		for j in range(0, 2):
+			if j == sel:
+				GPIO.output(fndSels[j], 1)
+			else:
+				GPIO.output(fndSels[j], 0)
+
 
 try:
 	while True:
-		for i in range(0, 4):
-			GPIO.output(fndSels[i], 1)		# fnd 선택
-			#GPIO.output(6, 0)
-			#GPIO.output(12, 0)
-			for j in range(0, 10):
-				fndOut(5)		# 5 출력!
-				time.sleep(0.5)
+		count += 1
+		d1000 = count / 1000
+		d100 = count % 1000 / 100
+		d10 = count % 100 / 10
+		d1 = count % 10
+
+		d = [d1, d10, d100, d1000]
+
+		for i in range(3, -1, -1):	# fnd 선택 for문
+			fndOut(int(d[i]), i)			# 값과 자리수 전달
+			time.sleep(0.01)
 
 except KeyboardInterrupt:
 	GPIO.cleanup()
