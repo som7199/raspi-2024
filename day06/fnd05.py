@@ -22,7 +22,6 @@ for fndSel in fndSels:
 def fndOut(data):
 	for i in range(0, 7):
 		# 비트 AND 연산으로 특정 세그먼트가 켜져 있는지 확인
-		# 결과가 1이면 세그먼트 켜져있고, 0이면 꺼져있음
 		GPIO.output(fndSegs[i], fndDatas[data] & (0x01 << i))
 
 try:
