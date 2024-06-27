@@ -31,6 +31,7 @@ class WindowClass(QMainWindow, form_class):
 		GPIO.output(red, True)
 
 	# TODO : ultraBtn 클릭하면 ultraLabel.Text에 거리 띄워지게 하기
+	# 어라 세그먼트에 거리 띄우기로 바꿀래
 	def ultraBtnFunction(self):
 		count = 0
 		print("Ultra Button Clicked!\nStart Checking Distance!")
