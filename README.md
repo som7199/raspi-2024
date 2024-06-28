@@ -173,3 +173,8 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 - 4 Digit FND 실습
 
 ## 6일차
+- 4 Digit FND 실습
+- PyQt5 로 GUI 제작
+
+## 7일차
+- PyQt5 로 GUI 제작(제출과제)

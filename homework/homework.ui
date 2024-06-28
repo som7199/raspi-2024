@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
+    <width>297</width>
     <height>450</height>
    </rect>
   </property>
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="ledBtnOn">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>180</y>
+      <x>30</x>
+      <y>70</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="ledBtnOff">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>180</y>
+      <x>150</x>
+      <y>70</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -40,24 +40,24 @@
      <string>LED OFF</string>
     </property>
    </widget>
-   <widget class="QDial" name="dial">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>250</y>
-      <width>50</width>
-      <height>64</height>
+      <x>30</x>
+      <y>190</y>
+      <width>71</width>
+      <height>21</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QLabel" name="ultraLabel">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>50</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
+    <property name="font">
+     <font>
+      <family>나눔고딕코딩</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+      <underline>false</underline>
+      <kerning>true</kerning>
+     </font>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
@@ -72,17 +72,85 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLCDNumber" name="lcdNumber">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>130</y>
+      <width>231</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>나눔고딕코딩</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>false</bool>
+    </property>
+    <property name="segmentStyle">
+     <enum>QLCDNumber::Filled</enum>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>20</number>
+    </property>
+   </widget>
    <widget class="QPushButton" name="ultraBtn">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>50</y>
-      <width>102</width>
-      <height>27</height>
+      <y>220</y>
+      <width>111</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Distance</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pirBtn">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>220</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Distance</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>나눔고딕코딩</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="text">
+     <string>동작 정보 띄우기</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -91,8 +159,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>556</width>
-     <height>25</height>
+     <width>297</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
