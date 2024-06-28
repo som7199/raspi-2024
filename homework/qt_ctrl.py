@@ -34,7 +34,8 @@ class WindowClass(QMainWindow, form_class):
 		self.ledBlue.clicked.connect(self.ledBlueOnFunction)
 		self.ledOff.clicked.connect(self.ledOffFunction)
 
-		self.rdoPiezo.clicked.connect(self.rdoPiezoFunction)
+		self.rdoPiezo.clicked.connect(self.rdoPiezoOnFunction)
+		self.rdoPiezo.clicked.connect(self.rdoPiezoToggleFunction)
 		self.ultraBtn.clicked.connect(self.ultraBtnFunction)
 
 	def ledRedOnFunction(self):
@@ -57,21 +58,33 @@ class WindowClass(QMainWindow, form_class):
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
-	def rdoPiezoFunction(self):
-		pwm = GPIO.PWM(piezoPin, 100)
-		pwm.start(90.0)
+	def rdoPiezoOnFunction(self):
+		if self.rdoPiezo.isChecked():
+			self.pwm = GPIO.PWM(piezoPin, 100)
+			self.pwm.start(90.0)
 
-		#scale = [262, 294, 330, 349, 392, 440, 494, 523]
-		scale = [262, 330]
+			#scale = [262, 294, 330, 349, 392, 440, 494, 523]
+			scale = [262, 330]
 
-		while True:
-			for s in scale:
-				pwm.ChangeFrequency(s)
-				time.sleep(1)
+			while True:
+				for s in scale:
+					self.pwm.ChangeFrequency(s)
+					time.sleep(1)
+
+			else:
+				self.rdoPiezoOffFunction()
 
 	def rdoPiezoOffFunction(self):
-		pwm = GPIO.PWM(piezoPin, 1)
-		pwm.stop()
+		if self.pwm is not None:
+			self.pwm.stop()
+			self.pwm = None
+
+	def rdoPiezoToggleFunction(self):
+		if self.rdoPiezo.isChecked():
+			self.rdoPiezoOnFunction()
+		else:
+			self.rdoPiezoOffFunction()
+
 
 	# TODO : ultraBtn 클릭하면 lcdNumber에 거리 띄우기
 	# distance < 20일 경우 빨간불/경고음 발생
