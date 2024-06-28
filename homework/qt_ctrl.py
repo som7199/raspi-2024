@@ -7,8 +7,6 @@ import time
 redPin = 17
 greenPin = 27
 bluePin = 19
-led = [redPin, greenPin, bluePin]
-
 trigPin = 24
 echoPin = 23
 pirPin = 22
@@ -31,13 +29,12 @@ class WindowClass(QMainWindow, form_class):
 		self.setupUi(self)
 
 		# 이벤트 함수 등록
-		for i in range(len(led)):
-			self.led[i].clicked.connect(self.ledBtnOffFunction)
-
 		self.ledRed.clicked.connect(self.ledRedOnFunction)
 		self.ledGreen.clicked.connect(self.ledGreenOnFunction)
 		self.ledBlue.clicked.connect(self.ledBlueOnFunction)
+		self.ledOff.clicked.connect(self.ledOffFunction)
 
+		self.rdoPiezo.clicked.connect(self.rdoPiezoFunction)
 		self.ultraBtn.clicked.connect(self.ultraBtnFunction)
 
 	def ledRedOnFunction(self):
@@ -55,19 +52,36 @@ class WindowClass(QMainWindow, form_class):
 		GPIO.output(greenPin, True)
 		GPIO.output(bluePin, False)
 
-	def ledBtnOffFunction(self):
+	def ledOffFunction(self):
 		GPIO.output(redPin, True)
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
-	# TODO : ultraBtn 클릭하면 ultraLabel.Text에 거리 띄워지게 하기
-	# 세그먼트에 거리 띄우기
+	def rdoPiezoFunction(self):
+		pwm = GPIO.PWM(piezoPin, 100)
+		pwm.start(90.0)
+
+		#scale = [262, 294, 330, 349, 392, 440, 494, 523]
+		scale = [262, 330]
+
+		while True:
+			for s in scale:
+				pwm.ChangeFrequency(s)
+				time.sleep(1)
+
+	def rdoPiezoOffFunction(self):
+		pwm = GPIO.PWM(piezoPin, 1)
+		pwm.stop()
+
+	# TODO : ultraBtn 클릭하면 lcdNumber에 거리 띄우기
+	# distance < 20일 경우 빨간불/경고음 발생
 	def ultraBtnFunction(self):
 		count = 0
 		print("Ultra Button Clicked!\nStart Checking Distance!")
-		while count < 50:
-			#self.ultraLabel.text = count
+		while count <= 50:
+			self.lcdNumber.display(count)
 			count += 1
+			time.sleep(1)
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
