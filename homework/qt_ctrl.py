@@ -118,8 +118,11 @@ class WindowClass(QMainWindow, form_class):
 		distance = (dlapsed * 19000) / 2			# 초음파 속도를 이용해서 거리 계산
 		return distance
 
-	# TODO : ultraBtn 클릭하면 lcdNumber에 거리 띄우기
-	# distance < 20일 경우 빨간불/경고음 발생
+	# TO-DO
+	# ultraBtn 클릭하면 lcdNumber에 거리 띄우기
+	# 거리가 5 이하일 때 Too Close label 활성화
+	# ultraStopBtnFunction() 구현
+	# 온습도센서 구현
 	def ultraStartBtnFunction(self):
 		self.lblDist.setText("Start measuring!")
 		self.pwm = GPIO.PWM(piezoPin, 440)
