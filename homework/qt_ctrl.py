@@ -2,15 +2,24 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 import RPi.GPIO as GPIO
+import time
 
-red = 4
-green = 17
-blue = 5
+redPin = 17
+greenPin = 27
+bluePin = 19
+trigPin = 24
+echoPin = 23
+pirPin = 22
+piezoPin = 13
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(red, GPIO.OUT)
-GPIO.setup(green, GPIO.OUT)
-GPIO.setup(blue, GPIO.OUT)
+GPIO.setup(redPin, GPIO.OUT)
+GPIO.setup(greenPin, GPIO.OUT)
+GPIO.setup(bluePin, GPIO.OUT)
+GPIO.setup(trigPin, GPIO.OUT)
+GPIO.setup(echoPin, GPIO.IN)
+GPIO.setup(pirPin, GPIO.IN)
+GPIO.setup(piezoPin, GPIO.OUT)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
@@ -25,13 +34,13 @@ class WindowClass(QMainWindow, form_class):
 		self.ultraBtn.clicked.connect(self.ultraBtnFunction)
 
 	def ledBtnOnFunction(self):
-		GPIO.output(red, False)
+		GPIO.output(redPin, False)
 
 	def ledBtnOffFunction(self):
-		GPIO.output(red, True)
+		GPIO.output(redPin, True)
 
 	# TODO : ultraBtn 클릭하면 ultraLabel.Text에 거리 띄워지게 하기
-	# 어라 세그먼트에 거리 띄우기로 바꿀래
+	# 세그먼트에 거리 띄우기
 	def ultraBtnFunction(self):
 		count = 0
 		print("Ultra Button Clicked!\nStart Checking Distance!")
