@@ -72,19 +72,25 @@ class WindowClass(QMainWindow, form_class):
 		self.pwm = GPIO.PWM(piezoPin, 440)
 		self.pwm.start(90.0)
 
-		#scale = [262, 294, 330, 349, 392, 440, 494, 523]
-		scale = [262, 330]
+		#[0도, 1, 2, 3, 4솔, 5, 6, 7]
+		scale = [262, 294, 330, 349, 392, 440, 494, 523]
+		#scale = [262, 330]
+		melody = [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0]
 
 		while self.piezo_running:
-			for s in scale:
+			for i in range(len(melody)):
 				if not self.piezo_running:
 					break
-				self.pwm.ChangeFrequency(s)
-				time.sleep(1)
+				if i == 6:
+					self.pwm.ChangeFrequency(scale[melody[i]])
+					time.sleep(1)
+				else:
+					self.pwm.ChangeFrequency(scale[melody[i]])
+					time.sleep(0.5)
 
 	def rdoPiezoOffFunction(self):
 		self.piezo_running = False
-		self.lblInfo.setText("Buzzor OFF!")
+		#self.lblInfo.setText("Buzzor OFF!")
 		if self.pwm is not None:
 			self.pwm.stop()
 			self.pwm = None
@@ -101,13 +107,12 @@ class WindowClass(QMainWindow, form_class):
 	# TODO : ultraBtn 클릭하면 lcdNumber에 거리 띄우기
 	# distance < 20일 경우 빨간불/경고음 발생
 	def ultraBtnFunction(self):
-		self.lblInfo.setText("Check Distance!")
+		self.lblDist.setText("Start measuring!")
 		count = 0
-		print("Ultra Button Clicked!\nStart Checking Distance!")
+		print("Start Checking Distance!")
 		while count <= 50:
 			self.lcdNumber.display(count)
 			count += 1
-			time.sleep(1)
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
