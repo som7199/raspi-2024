@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 import RPi.GPIO as GPIO
+import threading
 import time
 
 redPin = 17
@@ -34,54 +35,65 @@ class WindowClass(QMainWindow, form_class):
 		self.ledBlue.clicked.connect(self.ledBlueOnFunction)
 		self.ledOff.clicked.connect(self.ledOffFunction)
 
-		self.rdoPiezo.clicked.connect(self.rdoPiezoOnFunction)
-		self.rdoPiezo.clicked.connect(self.rdoPiezoToggleFunction)
+		#self.rdoPiezo.clicked.connect(self.rdoPiezoOnFunction)
+		self.rdoPiezo.toggled.connect(self.rdoPiezoToggleFunction)
 		self.ultraBtn.clicked.connect(self.ultraBtnFunction)
 
+		self.piezo_thread = None			# 피에조 부저 제어 스레드
+		self.piezo_running = False		# 피에조 부저의 동작 여부 제어 플래그
+
 	def ledRedOnFunction(self):
+		self.lblInfo.setText("RED ON")
 		GPIO.output(redPin, False)
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
 	def ledGreenOnFunction(self):
+		self.lblInfo.setText("GREEN ON")
 		GPIO.output(redPin, True)
 		GPIO.output(greenPin, False)
 		GPIO.output(bluePin, True)
 
 	def ledBlueOnFunction(self):
+		self.lblInfo.setText("BLUE ON")
 		GPIO.output(redPin, True)
 		GPIO.output(greenPin, True)
 		GPIO.output(bluePin, False)
 
 	def ledOffFunction(self):
+		self.lblInfo.setText("LED OFF")
 		GPIO.output(redPin, True)
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
 	def rdoPiezoOnFunction(self):
-		if self.rdoPiezo.isChecked():
-			self.pwm = GPIO.PWM(piezoPin, 100)
-			self.pwm.start(90.0)
+		self.piezo_running = True
+		self.lblInfo.setText("Buzzor ON!")
+		self.pwm = GPIO.PWM(piezoPin, 440)
+		self.pwm.start(90.0)
 
-			#scale = [262, 294, 330, 349, 392, 440, 494, 523]
-			scale = [262, 330]
+		#scale = [262, 294, 330, 349, 392, 440, 494, 523]
+		scale = [262, 330]
 
-			while True:
-				for s in scale:
-					self.pwm.ChangeFrequency(s)
-					time.sleep(1)
-
-			else:
-				self.rdoPiezoOffFunction()
+		while self.piezo_running:
+			for s in scale:
+				if not self.piezo_running:
+					break
+				self.pwm.ChangeFrequency(s)
+				time.sleep(1)
 
 	def rdoPiezoOffFunction(self):
+		self.piezo_running = False
+		self.lblInfo.setText("Buzzor OFF!")
 		if self.pwm is not None:
 			self.pwm.stop()
 			self.pwm = None
 
 	def rdoPiezoToggleFunction(self):
 		if self.rdoPiezo.isChecked():
-			self.rdoPiezoOnFunction()
+			if self.piezo_thread is None or not self.piezo_thread.is_alive():
+				self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
+				self.piezo_thread.start()
 		else:
 			self.rdoPiezoOffFunction()
 
@@ -89,6 +101,7 @@ class WindowClass(QMainWindow, form_class):
 	# TODO : ultraBtn 클릭하면 lcdNumber에 거리 띄우기
 	# distance < 20일 경우 빨간불/경고음 발생
 	def ultraBtnFunction(self):
+		self.lblInfo.setText("Check Distance!")
 		count = 0
 		print("Ultra Button Clicked!\nStart Checking Distance!")
 		while count <= 50:
