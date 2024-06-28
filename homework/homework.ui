@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>598</width>
-    <height>438</height>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,20 +41,20 @@
      <number>20</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="ultraBtn">
+   <widget class="QPushButton" name="ultraStartBtn">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>40</x>
       <y>180</y>
       <width>91</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Distance</string>
+     <string>Measure</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lblInfo">
+   <widget class="QLabel" name="lblLedInfo">
     <property name="geometry">
      <rect>
       <x>320</x>
@@ -73,7 +73,7 @@
      </font>
     </property>
     <property name="text">
-     <string>----</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="textFormat">
      <enum>Qt::AutoText</enum>
@@ -137,9 +137,9 @@
    <widget class="QRadioButton" name="rdoPiezo">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>300</y>
-      <width>81</width>
+      <x>430</x>
+      <y>290</y>
+      <width>91</width>
       <height>24</height>
      </rect>
     </property>
@@ -207,8 +207,8 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>180</y>
-      <width>101</width>
+      <y>220</y>
+      <width>201</width>
       <height>31</height>
      </rect>
     </property>
@@ -217,6 +217,35 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblSound">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>250</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ultraStopBtn">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>180</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop</string>
     </property>
    </widget>
   </widget>
