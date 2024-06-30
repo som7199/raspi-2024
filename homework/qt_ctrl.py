@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
+from PyQt5.QtCore import pyqtSignal, QThread
 import RPi.GPIO as GPIO
 import threading
 import time
@@ -24,6 +25,74 @@ GPIO.setup(piezoPin, GPIO.OUT)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
+# 초음파 측정 스레드 클래스 - QThread 상속
+# QThread 클래스를 이용해 별도의 스레드에서 초음파 측정
+class DistanceMeasurementThread(QThread):
+	# 측정 거리를 update_distance_signal 신호를 통해 메인 스레드로 전달
+	update_distance_signal = pyqtSignal(float)
+
+	def __init__(self):
+		super().__init__()
+		self.running = False
+		self.pwm = None
+
+	def run(self):
+		self.pwm = GPIO.PWM(piezoPin, 440)
+		self.pwm.start(0)		# 부저를 멈춘 상태로 시작
+		while self.running:
+			distance = self.measure()
+			self.update_distance_signal.emit(distance)		# 신호 방출!
+			self.controlWarning(distance)	# 부저 제어
+			time.sleep(0.5)		# 측정 주기 조절
+
+	def controlWarning(self, distance):
+		if distance <= 5:
+			self.pwm.ChangeDutyCycle(50)
+			self.pwm.ChangeFrequency(200)
+			time.sleep(0.1)
+			self.pwm.ChangeFrequency(400)
+			time.sleep(0.1)
+
+		elif distance <= 10:
+			self.pwm.ChangeDutyCycle(50)
+			self.pwm.ChangeFrequency(100)
+			time.sleep(0.3)
+			self.pwm.ChangeFrequency(300)
+			time.sleep(0.3)
+
+		else:
+			self.pwm.ChangeDutyCycle(0)		# 부저 멈추기
+			time.sleep(1)
+
+	def measure(self):
+		# 10us 동안 high 레벨로 trigger 출력하여 초음파 발생 준비
+		GPIO.output(trigPin, True)
+		time.sleep(0.00001)
+		GPIO.output(trigPin, False)
+		# 현재 시간 저장
+		start = time.time()
+
+		# echo가 없으면
+		while GPIO.input(echoPin) == False:
+			start = time.time()
+
+		# echo가 있으면
+		while GPIO.input(echoPin) == True:
+			stop = time.time()
+
+		elapsed = stop - start							# 걸린 시간
+		distance = (elapsed * 19000) / 2		# 초음파 속도를 이용한 거리 계산
+
+		return int(distance)
+
+	def stop(self):
+		self.running = False
+		self.wait()
+		self.pwm.stop()
+		GPIO.output(redPin, True)
+		GPIO.output(greenPin, True)
+		GPIO.output(bluePin, True)
+
 class WindowClass(QMainWindow, form_class):
 	def __init__(self):
 		super().__init__()
@@ -41,6 +110,9 @@ class WindowClass(QMainWindow, form_class):
 
 		self.piezo_thread = None			# 피에조 부저 제어 스레드
 		self.piezo_running = False		# 피에조 부저의 동작 여부 제어 플래그
+		self.measurement_thread = DistanceMeasurementThread()	# 초음파 측정 스레드
+		# 초음파 측정 스레드에서 발생하는 신호를 updateLcdNumber 함수에 연결
+		self.measurement_thread.update_distance_signal.connect(self.updateLcdNumber)
 
 	def ledRedOnFunction(self):
 		self.lblLedInfo.setText("RED ON")
@@ -102,76 +174,45 @@ class WindowClass(QMainWindow, form_class):
 		else:
 			self.rdoPiezoOffFunction()
 
-	def measure(self):
-		GPIO.output(trigPin, True)		# 10us 동안 high 레벨로 trigger 출력하여 초음파 발생 준비
-		time.sleep(0.00001)
-		GPIO.output(trigPin, False)
-		start = time.time()							# 현재 시간 저장
+	def updateLcdNumber(self, distance):
+		self.lcdNumber.display(distance)
+		if distance <= 5:
+			self.lblWarning.setText("Too close!")
+			self.lblWarning.setStyleSheet("color : red")
+			time.sleep(0.1)
+			GPIO.output(redPin, False)
+			GPIO.output(greenPin, True)
+			time.sleep(0.1)
+			GPIO.output(redPin,True)
+			time.sleep(0.1)
+			GPIO.output(redPin, False)
+			GPIO.output(greenPin, True)
 
-		while GPIO.input(echoPin) == False:		# echo가 없으면
-			start = time.time()									# 현재 시간을 start 변수에 저장하고
+		elif distance <= 10:
+			self.lblWarning.setText("Watch out!")
+			self.lblWarning.setStyleSheet("color : green")
+			time.sleep(0.3)
+			GPIO.output(redPin, True)
+			GPIO.output(greenPin, False)
+			time.sleep(0.3)
+			GPIO.output(greenPin, True)
+			time.sleep(0.3)
+			GPIO.output(redPin, True)
+			GPIO.output(greenPin, False)
 
-		while GPIO.input(echoPin) == True:		# echo가 있으면
-			stop = time.time()									# 현재 시간을 stop 변수에 저장
-
-		dlapsed = stop - start								# 걸린 시간을 구하고
-		distance = (dlapsed * 19000) / 2			# 초음파 속도를 이용해서 거리 계산
-		return distance
-
-	# TO-DO
-	# ultraBtn 클릭하면 lcdNumber에 거리 띄우기
-	# 거리가 5 이하일 때 Too Close label 활성화
-	# ultraStopBtnFunction() 구현
-	# 온습도센서 구현
-	def ultraStartBtnFunction(self):
-		self.lblDist.setText("Start measuring!")
-		self.pwm = GPIO.PWM(piezoPin, 440)
-
-		while True:
-			distance = self.measure()
-			print("Distance : %2.f cm" %distance)
-			self.lcdNumber.display(distance)
-
+		else:
+			self.lblWarning.setText("")
 			GPIO.output(redPin, True)
 			GPIO.output(greenPin, True)
-			GPIO.output(bluePin, True)
 
-			if distance <= 5:
-				self.pwm.start(50)
-				self.pwm.ChangeFrequency(200)
-				time.sleep(0.1)
-				GPIO.output(redPin, False)
-				GPIO.output(greenPin, True)
-				GPIO.output(bluePin, True)
-				self.pwm.ChangeFrequency(400)
-				time.sleep(0.1)
-
-			elif distance <= 10:
-				self.pwm.start(50)
-				self.pwm.ChangeFrequency(300)
-				time.sleep(0.3)
-				GPIO.output(redPin, True)
-				GPIO.output(greenPin, False)
-				GPIO.output(bluePin, True)
-				time.sleep(0.3)
-
-			elif distance <= 20:
-				self.pwm.start(50)
-				self.pwm.ChangeFrequency(400)
-				GPIO.output(redPin, True)
-				GPIO.output(greenPin, True)
-				GPIO.output(bluePin, False)
-				time.sleep(0.6)
-
-			else:
-				self.pwm.stop()
-				GPIO.output(redPin, True)
-				GPIO.output(greenPin, True)
-				GPIO.output(bluePin, True)
-				time.sleep(1)
+	def ultraStartBtnFunction(self):
+		self.lblDist.setText("Start measuring!")
+		self.measurement_thread.running = True
+		self.measurement_thread.start()
 
 	def ultraStopBtnFunction(self):
-		print("HI")
+		self.lblDist.setText("Stop Measuring!")
+		self.measurement_thread.stop()
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
