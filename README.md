@@ -177,4 +177,15 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 - PyQt5 로 GUI 제작
 
 ## 7일차
-- PyQt5 로 GUI 제작(제출과제)
+- PyQt5를 이용한 GUI 토이 프로젝트
+- 초음파 측정 스레드 클래스
+    - QThread를 상속받은 DistanceMeasurementThread 클래스 생성!
+    - update_distance_signal로 측정된 거리를 메인 스레드로 전달
+
+    ```python
+    self.measurement_thread.update_distance_signal.connect(self.update_lcd_number)
+    # DistanceMeasurementThread 클래스에서 정의한 update_distance_signal 신호를 update_lcd_number 슬롯(함수)에 연결
+    # update_distance_signal 신호가 방출될 때마다 update_lcd_number 함수가 호출
+    ```
+
+- 리드미 작성 다시하기!
