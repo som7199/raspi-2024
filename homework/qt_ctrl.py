@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSignal, QThread
 import RPi.GPIO as GPIO
 import threading
 import time
+#import Adafruit_DHT
 
 redPin = 17
 greenPin = 27
@@ -13,6 +14,8 @@ trigPin = 24
 echoPin = 23
 pirPin = 22
 piezoPin = 13
+#dhtPin = 18
+#dhtSensor = Adafruit_DHT.DHT11
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(redPin, GPIO.OUT)
@@ -22,6 +25,7 @@ GPIO.setup(trigPin, GPIO.OUT)
 GPIO.setup(echoPin, GPIO.IN)
 GPIO.setup(pirPin, GPIO.IN)
 GPIO.setup(piezoPin, GPIO.OUT)
+GPIO.setup(dhtPin, GPIO.IN)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
