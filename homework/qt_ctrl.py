@@ -147,6 +147,7 @@ class WindowClass(QMainWindow, form_class):
 				time.sleep(0.1)
 
 			elif distance <= 10:
+				self.pwm.start(50)
 				self.pwm.ChangeFrequency(300)
 				time.sleep(0.3)
 				GPIO.output(redPin, True)
@@ -155,6 +156,7 @@ class WindowClass(QMainWindow, form_class):
 				time.sleep(0.3)
 
 			elif distance <= 20:
+				self.pwm.start(50)
 				self.pwm.ChangeFrequency(400)
 				GPIO.output(redPin, True)
 				GPIO.output(greenPin, True)
