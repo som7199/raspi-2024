@@ -31,6 +31,7 @@ dhtSensor = adafruit_dht.DHT11(board.D18)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
+# 온습도 측정 스레드 클래스
 class DHTMeasurementThread(QThread):
 	update_temperature_signal = pyqtSignal(float)
 	update_humidity_signal = pyqtSignal(float)
