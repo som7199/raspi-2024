@@ -177,15 +177,52 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 - PyQt5 로 GUI 제작
 
 ## 7일차
-- PyQt5를 이용한 GUI 토이 프로젝트
-- 초음파 측정 스레드 클래스
-    - QThread를 상속받은 DistanceMeasurementThread 클래스 생성!
-    - update_distance_signal로 측정된 거리를 메인 스레드로 전달
+- PyQt5를 이용한 GUI 토이 프로젝트(homework/main.py)
+    - 초음파 측정 스레드 클래스
+        - QThread를 상속받은 DistanceMeasurementThread 클래스 생성!
+        - update_distance_signal로 측정된 거리를 메인 스레드로 전달
 
-    ```python
-    self.measurement_thread.update_distance_signal.connect(self.update_lcd_number)
-    # DistanceMeasurementThread 클래스에서 정의한 update_distance_signal 신호를 update_lcd_number 슬롯(함수)에 연결
-    # update_distance_signal 신호가 방출될 때마다 update_lcd_number 함수가 호출
-    ```
+        ```python
+        self.measurement_thread.update_distance_signal.connect(self.update_lcd_number)
+        # DistanceMeasurementThread 클래스에서 정의한 update_distance_signal 신호를 update_lcd_number 슬롯(함수)에 연결
+        # update_distance_signal 신호가 방출될 때마다 update_lcd_number 함수가 호출
+        ```
 
-- 리드미 작성 다시하기!
+    - 온습도 측정 스레드
+        ```python
+        # 온습도 측정 스레드 클래스
+        class DHTMeasurementThread(QThread):
+            # GUI에 전달할 신호
+            update_temperature_signal = pyqtSignal(float)
+            update_humidity_signal = pyqtSignal(float)
+
+            def __init__(self):
+                super().__init__()
+                self.running = False
+
+            def run(self):
+                log_num = 0
+                while self.running:
+                    try:
+                        temperature = dhtSensor.temperature     # DHT11 센서에서 온도 읽기
+                        humidity = dhtSensor.humidity           # DHT11 센서에서 습도 읽기
+                        # 온도와 습도를 읽어와 신호 방출!
+                        self.update_temperature_signal.emit(temperature)    # 온도 데이터를 GUI로 전달
+                        self.update_humidity_signal.emit(humidity)          # 습도 데이터를 GUI로 전달
+                        print(f'{log_num} - Temp : {temperature}C / Humid : {humidity}%')
+                        log_num += 1
+                        if temperature is None or humidity is None:
+                            print(f'{log_num} - Failed to retrieve data from DHT Sensor')
+                            continue
+
+                    except RuntimeError as error:
+                        print(f'{log_num} - Error reading DHT11 : {error}')
+                    time.sleep(2)
+
+            def stop(self):
+                self.running = False
+                self.wait()
+        ```
+
+- Timer vs Thread
+    - Thread 선택 이유!
