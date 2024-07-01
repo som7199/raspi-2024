@@ -15,8 +15,9 @@ trigPin = 24
 echoPin = 23
 pirPin = 22
 piezoPin = 13
-dhtPin = 18
+dhtPin = 20
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(redPin, GPIO.OUT)
 GPIO.setup(greenPin, GPIO.OUT)
@@ -26,13 +27,13 @@ GPIO.setup(echoPin, GPIO.IN)
 GPIO.setup(pirPin, GPIO.IN)
 GPIO.setup(piezoPin, GPIO.OUT)
 GPIO.setup(dhtPin, GPIO.IN)
-dhtSensor = adafruit_dht.DHT11(board.D18)
+dhtSensor = adafruit_dht.DHT11(board.D20)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
 class DHTMeasurementThread(QThread):
 	update_temperature_signal = pyqtSignal(float)
-	update_humidity_signal = pyqtSignal(int)
+	update_humidity_signal = pyqtSignal(float)
 
 	def __init__(self):
 		super().__init__()
@@ -41,12 +42,19 @@ class DHTMeasurementThread(QThread):
 	def run(self):
 		log_num = 0
 		while self.running:
-			temperature = dhtSensor.temperature
-			humidity = dhtSensor.humidity
-			self.update_temperature_signal.emit(temperature)
-			self.update_humidity_signal.emit(humidity)
-			print(f'{log_num} - Temp : {temperature}C / Humid : {humidity}%')
-			log_num += 1
+			try:
+				temperature = dhtSensor.temperature
+				humidity = dhtSensor.humidity
+				self.update_temperature_signal.emit(temperature)
+				self.update_humidity_signal.emit(humidity)
+				print(f'{log_num} - Temp : {temperature}C / Humid : {humidity}%')
+				log_num += 1
+				if temperature is None or humidity is None:
+					print(f'{log_num} - Failed to retrieve data from DHT Sensor')
+					continue
+
+			except RuntimeError as error:
+				print(f'{log_num} - Error reading DHT11 : {error}')
 			time.sleep(2)
 
 	def stop(self):
@@ -154,24 +162,28 @@ class WindowClass(QMainWindow, form_class):
 
 	def ledRedOnFunction(self):
 		self.lblLedInfo.setText("RED ON")
+		self.lblLedInfo.setStyleSheet("color : red")
 		GPIO.output(redPin, False)
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
 	def ledGreenOnFunction(self):
 		self.lblLedInfo.setText("GREEN ON")
+		self.lblLedInfo.setStyleSheet("color : green")
 		GPIO.output(redPin, True)
 		GPIO.output(greenPin, False)
 		GPIO.output(bluePin, True)
 
 	def ledBlueOnFunction(self):
 		self.lblLedInfo.setText("BLUE ON")
+		self.lblLedInfo.setStyleSheet("color : blue")
 		GPIO.output(redPin, True)
 		GPIO.output(greenPin, True)
 		GPIO.output(bluePin, False)
 
 	def ledOffFunction(self):
 		self.lblLedInfo.setText("LED OFF")
+		self.lblLedInfo.setStyleSheet("color : black")
 		GPIO.output(redPin, True)
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
@@ -254,10 +266,27 @@ class WindowClass(QMainWindow, form_class):
 
 	def updateTemperature(self, temperature):
 		self.lcdNumber_temp.display(temperature)
+		if temperature >= 28:
+			self.lblTemp.setText("AC ON!")
+			self.lblTemp.setStyleSheet("color : Blue")
+			GPIO.output(bluePin, False)
+			if temperature <= 25:
+				self.lblTemp.setText("Comfortable temperature")
+				self.lblTemp.setStyleSheet("color : Black")
+				GPIO.output(bluePin, True)
 
 	def updateHumidity(self, humidity):
 		self.lcdNumber_hum.display(humidity)
-
+		if humidity >= 75:
+			self.lblHum.setText("Start Humidity Control")
+			self.lblHum.setStyleSheet("color : yellow")
+			GPIO.output(greenPin, False)
+			GPIO.output(bluePin, False)
+			if humidity <= 55:
+				self.lblHum.setText("Stop Humidity Control")
+				self.lblHum.setStyleSheet("color : black")
+				GPIO.output(greenPin, True)
+				GPIO.output(bluePin, True)
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
 	myWindow = WindowClass()
