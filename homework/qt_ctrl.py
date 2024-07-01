@@ -266,27 +266,43 @@ class WindowClass(QMainWindow, form_class):
 
 	def updateTemperature(self, temperature):
 		self.lcdNumber_temp.display(temperature)
-		if temperature >= 28:
+		self.lblTemp.setText("")
+		'''
+		if temperature >= 27:
+			self.pwm(piezoPin, 440)
+			self.pwm.start(50)
+			melody = [262, 330, 392]
+			for m in melody:
+				self.pwm.ChangeFrequency(m)
+			self.pwm.stop()
 			self.lblTemp.setText("AC ON!")
 			self.lblTemp.setStyleSheet("color : Blue")
-			GPIO.output(bluePin, False)
-			if temperature <= 25:
-				self.lblTemp.setText("Comfortable temperature")
-				self.lblTemp.setStyleSheet("color : Black")
-				GPIO.output(bluePin, True)
+
+		else:
+			self.lblTemp.setText("Comfortable Temperature")
+			self.lblTemp.setStyleSheet("color : Blue")
+		'''
 
 	def updateHumidity(self, humidity):
 		self.lcdNumber_hum.display(humidity)
-		if humidity >= 75:
+		self.lblHum.setText("")
+		if humidity >= 60:
 			self.lblHum.setText("Start Humidity Control")
 			self.lblHum.setStyleSheet("color : yellow")
-			GPIO.output(greenPin, False)
-			GPIO.output(bluePin, False)
-			if humidity <= 55:
-				self.lblHum.setText("Stop Humidity Control")
-				self.lblHum.setStyleSheet("color : black")
+			GPIO.output(redPin, True)
+			for _ in range(3):
+				GPIO.output(greenPin, False)
+				GPIO.output(bluePin, False)
+				time.sleep(1)
 				GPIO.output(greenPin, True)
-				GPIO.output(bluePin, True)
+				GPIO.output(bluePin, False)
+				time.sleep(1)
+		else:
+			self.lblHum.setText("Moderate Humidity")
+			self.lblHum.setStyleSheet("color : green")
+			GPIO.output(greenPin, True)
+			GPIO.output(bluePin, True)
+
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
 	myWindow = WindowClass()

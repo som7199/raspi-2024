@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
+    <width>479</width>
     <height>499</height>
    </rect>
   </property>
@@ -335,10 +335,14 @@
     <property name="font">
      <font>
       <family>나눔고딕코딩</family>
+      <pointsize>11</pointsize>
      </font>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="lblHum">
@@ -353,10 +357,14 @@
     <property name="font">
      <font>
       <family>나눔고딕코딩</family>
+      <pointsize>11</pointsize>
      </font>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="labelT">
@@ -409,7 +417,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>516</width>
+     <width>479</width>
      <height>25</height>
     </rect>
    </property>
