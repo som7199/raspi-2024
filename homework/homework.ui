@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>479</width>
-    <height>499</height>
+    <width>489</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,7 +65,7 @@
       <x>20</x>
       <y>280</y>
       <width>201</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -91,7 +91,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>340</y>
+      <y>330</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -109,7 +109,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>340</y>
+      <y>330</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -127,7 +127,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>390</y>
+      <y>380</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -145,7 +145,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>390</y>
+      <y>380</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -162,9 +162,9 @@
    <widget class="QRadioButton" name="rdoPiezo">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>330</y>
-      <width>91</width>
+      <x>280</x>
+      <y>360</y>
+      <width>81</width>
       <height>24</height>
      </rect>
     </property>
@@ -244,9 +244,9 @@
    <widget class="QLabel" name="lblSound">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>290</y>
-      <width>201</width>
+      <x>250</x>
+      <y>310</y>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -327,9 +327,9 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>200</y>
+      <y>198</y>
       <width>171</width>
-      <height>19</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -349,9 +349,9 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>230</y>
+      <y>240</y>
       <width>171</width>
-      <height>19</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -411,13 +411,23 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QDial" name="dial">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>350</y>
+      <width>50</width>
+      <height>51</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>479</width>
+     <width>489</width>
      <height>25</height>
     </rect>
    </property>

@@ -194,7 +194,6 @@ class WindowClass(QMainWindow, form_class):
 		self.pwm = GPIO.PWM(piezoPin, 440)
 		self.pwm.start(90.0)
 
-		#[0도, 1, 2, 3, 4솔, 5, 6, 7]
 		scale = [262, 294, 330, 349, 392, 440, 494, 523]
 		melody = [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0]
 
@@ -202,11 +201,14 @@ class WindowClass(QMainWindow, form_class):
 			for i in range(len(melody)):
 				if not self.piezo_running:
 					break
+				frequency = scale[melody[i]]
+				self.pwm.ChangeFrequency(frequency)
+				duty_cycle = self.dial.value()
+				self.pwm.ChangeDutyCycle(duty_cycle
 				if i == 6:
-					self.pwm.ChangeFrequency(scale[melody[i]])
 					time.sleep(1)
 				else:
-					self.pwm.ChangeFrequency(scale[melody[i]])
+
 					time.sleep(0.5)
 
 	def rdoPiezoOffFunction(self):
