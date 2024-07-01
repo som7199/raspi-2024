@@ -219,7 +219,6 @@ class WindowClass(QMainWindow, form_class):
 
 	def rdoPiezoToggleFunction(self):
 		if self.rdoPiezo.isChecked():
-			#if self.piezo_thread is None or not self.piezo_thread.is_alive():
 			self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
 			self.piezo_thread.start()
 		else:
@@ -287,9 +286,7 @@ class WindowClass(QMainWindow, form_class):
 		else:
 			self.lblHum.setText("Moderate Humidity")
 			self.lblHum.setStyleSheet("color : green")
-			GPIO.output(redPin, True)
 			GPIO.output(greenPin, True)
-			GPIO.output(bluePin, True)
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
