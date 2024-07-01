@@ -5,7 +5,8 @@ from PyQt5.QtCore import pyqtSignal, QThread
 import RPi.GPIO as GPIO
 import threading
 import time
-#import Adafruit_DHT
+import adafruit_dht
+import board
 
 redPin = 17
 greenPin = 27
@@ -14,8 +15,7 @@ trigPin = 24
 echoPin = 23
 pirPin = 22
 piezoPin = 13
-#dhtPin = 18
-#dhtSensor = Adafruit_DHT.DHT11
+dhtPin = 18
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(redPin, GPIO.OUT)
@@ -26,8 +26,32 @@ GPIO.setup(echoPin, GPIO.IN)
 GPIO.setup(pirPin, GPIO.IN)
 GPIO.setup(piezoPin, GPIO.OUT)
 GPIO.setup(dhtPin, GPIO.IN)
+dhtSensor = adafruit_dht.DHT11(board.D18)
 
 form_class = uic.loadUiType("./homework.ui")[0]
+
+class DHTMeasurementThread(QThread):
+	update_temperature_signal = pyqtSignal(float)
+	update_humidity_signal = pyqtSignal(int)
+
+	def __init__(self):
+		super().__init__()
+		self.running = False
+
+	def run(self):
+		log_num = 0
+		while self.running:
+			temperature = dhtSensor.temperature
+			humidity = dhtSensor.humidity
+			self.update_temperature_signal.emit(temperature)
+			self.update_humidity_signal.emit(humidity)
+			print(f'{log_num} - Temp : {temperature}C / Humid : {humidity}%')
+			log_num += 1
+			time.sleep(2)
+
+	def stop(self):
+		self.running = False
+		self.wait()
 
 # 초음파 측정 스레드 클래스 - QThread 상속
 # QThread 클래스를 이용해 별도의 스레드에서 초음파 측정
@@ -114,9 +138,19 @@ class WindowClass(QMainWindow, form_class):
 
 		self.piezo_thread = None			# 피에조 부저 제어 스레드
 		self.piezo_running = False		# 피에조 부저의 동작 여부 제어 플래그
-		self.measurement_thread = DistanceMeasurementThread()	# 초음파 측정 스레드
+
+		# 초음파 측정 스레드
+		self.measurement_thread = DistanceMeasurementThread()
 		# 초음파 측정 스레드에서 발생하는 신호를 updateLcdNumber 함수에 연결
 		self.measurement_thread.update_distance_signal.connect(self.updateLcdNumber)
+
+		# 온습도 측정 스레드
+		self.dht_thread = DHTMeasurementThread()
+		self.dht_thread.update_temperature_signal.connect(self.updateTemperature)
+		self.dht_thread.update_humidity_signal.connect(self.updateHumidity)
+		self.dht_thread.running = True
+		self.dht_thread.start()		# 온습도 측정 스레드 시작!!
+
 
 	def ledRedOnFunction(self):
 		self.lblLedInfo.setText("RED ON")
@@ -217,6 +251,12 @@ class WindowClass(QMainWindow, form_class):
 	def ultraStopBtnFunction(self):
 		self.lblDist.setText("Stop Measuring!")
 		self.measurement_thread.stop()
+
+	def updateTemperature(self, temperature):
+		self.lcdNumber_temp.display(temperature)
+
+	def updateHumidity(self, humidity):
+		self.lcdNumber_hum.display(humidity)
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
