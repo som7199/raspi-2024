@@ -204,11 +204,10 @@ class WindowClass(QMainWindow, form_class):
 				frequency = scale[melody[i]]
 				self.pwm.ChangeFrequency(frequency)
 				duty_cycle = self.dial.value()
-				self.pwm.ChangeDutyCycle(duty_cycle
+				self.pwm.ChangeDutyCycle(duty_cycle)
 				if i == 6:
 					time.sleep(1)
 				else:
-
 					time.sleep(0.5)
 
 	def rdoPiezoOffFunction(self):
@@ -220,9 +219,9 @@ class WindowClass(QMainWindow, form_class):
 
 	def rdoPiezoToggleFunction(self):
 		if self.rdoPiezo.isChecked():
-			if self.piezo_thread is None or not self.piezo_thread.is_alive():
-				self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
-				self.piezo_thread.start()
+			#if self.piezo_thread is None or not self.piezo_thread.is_alive():
+			self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
+			self.piezo_thread.start()
 		else:
 			self.rdoPiezoOffFunction()
 
