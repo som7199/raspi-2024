@@ -282,7 +282,7 @@ class WindowClass(QMainWindow, form_class):
 	def updateHumidity(self, humidity):
 		self.lcdNumber_hum.display(humidity)
 		self.lblHum.setText("")
-		if humidity >= 65:
+		if humidity > 72:
 			self.lblHum.setText("Start Humidity Control")
 			self.lblHum.setStyleSheet("color : red")
 			GPIO.output(greenPin, False)
