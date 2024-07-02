@@ -178,6 +178,11 @@ IoT 개발자 과정 라즈베리파이 리포지토리
 
 ## 7일차
 - PyQt5를 이용한 GUI 토이 프로젝트(homework/main.py)
+    
+
+    https://github.com/som7199/raspi-2024/assets/95500015/9e3e1f3f-1d43-4073-8f11-3010708ea827
+
+
     - 초음파 측정 스레드 클래스
         - QThread를 상속받은 DistanceMeasurementThread 클래스 생성!
         - update_distance_signal로 측정된 거리를 메인 스레드로 전달
