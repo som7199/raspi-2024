@@ -31,6 +31,7 @@ dhtSensor = adafruit_dht.DHT11(board.D18)
 
 form_class = uic.loadUiType("./homework.ui")[0]
 
+# 온습도 측정 스레드 클래스
 class DHTMeasurementThread(QThread):
 	update_temperature_signal = pyqtSignal(float)
 	update_humidity_signal = pyqtSignal(float)
@@ -190,37 +191,39 @@ class WindowClass(QMainWindow, form_class):
 
 	def rdoPiezoOnFunction(self):
 		self.piezo_running = True
-		self.lblSound.setText("Buzzor ON!")
+		self.lblBuzzInfo.setText("Playing...")
 		self.pwm = GPIO.PWM(piezoPin, 440)
 		self.pwm.start(90.0)
 
-		#[0도, 1, 2, 3, 4솔, 5, 6, 7]
-		scale = [262, 294, 330, 349, 392, 440, 494, 523]
-		melody = [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0]
+		scale = [262, 294, 330, 349, 392, 440, 494, 523]		# 도 0 솔 4
+		melody = [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0, \
+							4, 4, 3, 3, 2, 2, 1, 4, 4, 3, 3, 2, 2, 1, \
+							0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0]
 
 		while self.piezo_running:
 			for i in range(len(melody)):
 				if not self.piezo_running:
 					break
-				if i == 6:
-					self.pwm.ChangeFrequency(scale[melody[i]])
+				frequency = scale[melody[i]]
+				self.pwm.ChangeFrequency(frequency)
+				duty_cycle = self.dial.value()
+				self.pwm.ChangeDutyCycle(duty_cycle)
+				if i == 6 or i == 13 or i == 20 or i == 27 or i == 34 or i == 41:
 					time.sleep(1)
 				else:
-					self.pwm.ChangeFrequency(scale[melody[i]])
 					time.sleep(0.5)
 
 	def rdoPiezoOffFunction(self):
 		self.piezo_running = False
-		self.lblSound.setText("Buzzor OFF!")
+		self.lblBuzzInfo.setText("Stop Playing")
 		if self.pwm is not None:
 			self.pwm.stop()
 			self.pwm = None
 
 	def rdoPiezoToggleFunction(self):
 		if self.rdoPiezo.isChecked():
-			if self.piezo_thread is None or not self.piezo_thread.is_alive():
-				self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
-				self.piezo_thread.start()
+			self.piezo_thread = threading.Thread(target=self.rdoPiezoOnFunction)
+			self.piezo_thread.start()
 		else:
 			self.rdoPiezoOffFunction()
 
@@ -286,9 +289,7 @@ class WindowClass(QMainWindow, form_class):
 		else:
 			self.lblHum.setText("Moderate Humidity")
 			self.lblHum.setStyleSheet("color : green")
-			GPIO.output(redPin, True)
 			GPIO.output(greenPin, True)
-			GPIO.output(bluePin, True)
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)

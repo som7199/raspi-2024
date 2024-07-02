@@ -29,7 +29,7 @@ GPIO.setup(piezoPin, GPIO.OUT)
 GPIO.setup(dhtPin, GPIO.IN)
 dhtSensor = adafruit_dht.DHT11(board.D18)
 
-form_class = uic.loadUiType("./homework.ui")[0]
+form_class = uic.loadUiType("./main.ui")[0]
 
 # 온습도 측정 스레드 클래스
 class DHTMeasurementThread(QThread):
@@ -141,12 +141,12 @@ class WindowClass(QMainWindow, form_class):
 		self.ledBlue.clicked.connect(self.ledBlueOnFunction)
 		self.ledOff.clicked.connect(self.ledOffFunction)
 
-		self.rdoPiezo.toggled.connect(self.rdoPiezoToggleFunction)
+		#self.rdoPiezo.toggled.connect(self.rdoPiezoToggleFunction)
 		self.ultraStartBtn.clicked.connect(self.ultraStartBtnFunction)
 		self.ultraStopBtn.clicked.connect(self.ultraStopBtnFunction)
 
-		self.piezo_thread = None			# 피에조 부저 제어 스레드
-		self.piezo_running = False		# 피에조 부저의 동작 여부 제어 플래그
+		#self.piezo_thread = None			# 피에조 부저 제어 스레드
+		#self.piezo_running = False		# 피에조 부저의 동작 여부 제어 플래그
 
 		# 초음파 측정 스레드
 		self.measurement_thread = DistanceMeasurementThread()
@@ -189,6 +189,7 @@ class WindowClass(QMainWindow, form_class):
 		GPIO.output(bluePin, True)
 		GPIO.output(greenPin, True)
 
+	'''
 	def rdoPiezoOnFunction(self):
 		self.piezo_running = True
 		self.lblSound.setText("Buzzor ON!")
@@ -224,6 +225,7 @@ class WindowClass(QMainWindow, form_class):
 			self.piezo_thread.start()
 		else:
 			self.rdoPiezoOffFunction()
+	'''
 
 	def updateLcdNumber(self, distance):
 		self.lcdNumber.display(distance)
