@@ -167,7 +167,7 @@ IoT 개발자 과정 라즈베리파이 리포지토리
     - 공통 단자인 COM 부분에 VCC, a,b,c,d,e,f,g,dp에 GND
         ![Common Anode](https://raw.githubusercontent.com/som7199/raspi-2024/main/images/ras008.png)
 
-- 내꺼는 공통 양극!
+- 나는 Common Anode 타입 사용!
 
 ## 5일차
 - 4 Digit FND 실습
@@ -188,9 +188,38 @@ IoT 개발자 과정 라즈베리파이 리포지토리
         - update_distance_signal로 측정된 거리를 메인 스레드로 전달
 
         ```python
-        self.measurement_thread.update_distance_signal.connect(self.update_lcd_number)
-        # DistanceMeasurementThread 클래스에서 정의한 update_distance_signal 신호를 update_lcd_number 슬롯(함수)에 연결
-        # update_distance_signal 신호가 방출될 때마다 update_lcd_number 함수가 호출
+        class DistanceMeasurementThread(QThread):
+        # 측정 거리를 update_distance_signal 신호를 통해 메인 스레드로 전달
+            update_distance_signal = pyqtSignal(float)
+
+            def __init__(self):
+                super().__init__()
+                self.running = False
+                self.pwm = None
+
+            def run(self):
+                self.pwm = GPIO.PWM(piezoPin, 440)
+                self.pwm.start(0)		# 부저를 멈춘 상태로 시작
+                while self.running:
+                    distance = self.measure()
+                    self.update_distance_signal.emit(distance)		# 신호 방출!
+                    self.controlWarning(distance)	# 부저 제어
+                    time.sleep(0.5)		# 측정 주기 조절
+
+            def controlWarning(self, distance):
+                # 거리에 따른 부저의 주파수 변경
+
+            def measure(self):
+                # 초음파 속도를 이용한 거리 계산
+
+            def stop(self):
+                # 스레드 멈추기
+        # ...
+        class WindowClass(QMainWindow, form_class):
+            self.measurement_thread.update_distance_signal.connect(self.update_lcd_number)
+            # DistanceMeasurementThread 클래스에서 정의한 update_distance_signal 신호를 update_lcd_number 슬롯(함수)에 연결
+            # update_distance_signal 신호가 방출될 때마다 update_lcd_number 함수가 호출
+            # ...
         ```
 
     - 온습도 측정 스레드
@@ -229,5 +258,12 @@ IoT 개발자 과정 라즈베리파이 리포지토리
                 self.wait()
         ```
 
-- Timer vs Thread
-    - Thread 선택 이유!
+- QTimer vs QThread
+    - QTimer
+        - 주기적으로 반복되는 작업 처리에 적합
+        - 메인 스레드에서 작동, GUI 업데이트와 같이 메인 스레드에서 실행되어야 하는 작업에 유용
+        - 주기적으로 그래프를 업데이트한다면 QTimer를 사용해서 GUI 업데이트 하는 게 나음
+    - QThread✅
+        - 동시에 여러 작업 처리에 적합
+        - 별도의 스레드에서 실행, *메인 스레드와 독립적으로 작업 수행 가능!*
+        - 여러 센서에서 데이터를 읽어야하는 경우 QThread를 사용하는 게 나음
